@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Secure";
+}
+<h1>@ViewData["Title"]</h1>
+
+<p>Use this page to show sensitive information that should only be shown to an authenticated user.</p>
+
+<div>
+    <h4>Profile Pic</h4>
+    <img src=@Model.ProfileURL class="profile-pic"/>
+    <h4>Claims</h4>
+    <ul>
+        @foreach (var claim in Model.Claims)
+        {
+            <li><b>@claim.Type</b> <span>@claim.Value</span></li>
+
+        }
+    </ul>
+    <h4>Access Token</h4>
+    <p class="field">@Model.AccessToken</p>
+    <h4>ID Token</h4>
+    <p class="field">@Model.IdToken</p>
+    <h4>Refresh Token</h4>
+    <p class="field">@Model.RefreshToken</p>
+</div>
+
