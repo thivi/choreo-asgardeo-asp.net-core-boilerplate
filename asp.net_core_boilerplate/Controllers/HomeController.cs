@@ -64,7 +64,6 @@ public class HomeController : Controller
             profilePic = json.profile;
         }
         
-
         return View(new Secure {
             Claims = claims,
             AccessToken = accessToken,
