@@ -1,5 +1,5 @@
 ﻿using System;
-namespace asp.net_core_boilerplte.Models
+namespace asp.net_core_boilerplate.Models
 {
 	public class Secure
 	{

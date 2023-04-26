@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using asp.net_core_boilerplte.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -12,6 +11,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
+using asp.net_core_boilerplate.Models;
 
 namespace asp.net_core_boilerplte.Controllers;
 
@@ -72,6 +72,38 @@ public class HomeController : Controller
             RefreshToken = refreshToken,
             ProfileURL = profilePic
         });
+    }
+
+    [Authorize]
+    public async Task<IActionResult> Choreo()
+    {
+        var accessToken = await HttpContext.GetTokenAsync("access_token");
+        var apiEndpoint = _configuration["Choreo:ApiEndpoint"];
+
+        var httpClient = new HttpClient();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+
+        using var response = await httpClient.GetAsync($"{apiEndpoint}/pet/1");
+
+        string category = "";
+        string name = "";
+        
+        if(response.IsSuccessStatusCode)
+        {
+            string content = await response.Content.ReadAsStringAsync();
+            dynamic json = JsonConvert.DeserializeObject(content)!;
+
+            category = json.category.name;
+            name = json.name;
+        }
+
+        return View(new Pet
+        {
+            Category = category,
+            Name = name,
+            ID = 1
+        });
+        ;
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
